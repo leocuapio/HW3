@@ -14,7 +14,7 @@ std::vector<std::string> split(std::string s, std::string del) {
     }
     v.push_back(s.substr(start));
     return v;
-}
+}   
 
 std::string FORMAT = "^([\\s\\S]*)\\\\answer\\{([\\s\\S]*)\\}[\\s\\S]*\\\\topic\\{(.*)\\}[\\s\\S]*\\\\difficulty\\{(.*)\\}";
 std::regex re(FORMAT);
@@ -23,6 +23,7 @@ std::string Problem::getQuestion() {return question;}
 std::string Problem::getAnswer() {return answer;}
 std::string Problem::getTopic() {return topic;}
 int Problem::getDifficulty() {return difficulty;}
+
 
 Problem::Problem(std::string rawProblem) {
     std::smatch match;
@@ -35,6 +36,7 @@ Problem::Problem(std::string rawProblem) {
     topic = match.str(3);
     difficulty = std::stoi(match.str(4));
 }
+
 std::vector<Problem> Problem::problemList(std::string filename) {
     // Read problems from file
     std::ifstream file(filename);

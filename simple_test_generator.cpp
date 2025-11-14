@@ -7,6 +7,9 @@
 #include <set>
 #include "problem.h"
 
+
+
+
 // ****************************************************************************
 // Configuration details
 
@@ -34,7 +37,7 @@ std::string CONTENT_HEADER = "simple_content_header.tex";
 
 // Check whether a proposed test is valid according to the above constraints.
 bool valid(std::vector<Problem> test, std::set<std::string> topics) {
-    // Initialize metrics
+    // Initialize metricsx
     int difficulty = 0;
     std::map<std::string, int> topicCounts;
     for (std::string topic : topics) {
