@@ -7,6 +7,62 @@
 #include <set>
 #include "problem.h"
 
+class Header {
+private:
+    std::string texFile;      
+    std::string contentFile;  
+    std::map<std::string, std::string> commands; 
+
+public:
+    Header(const std::string& tex, const std::string& content): texFile(tex), contentFile(content) {}
+
+    void addCommand(const std::string& key, const std::string& val) {
+        commands[key] = val;
+    }
+
+    void addCommand(const std::string& key, int val) {
+        commands[key] = std::to_string(val);  // Automatically convert numbers to strings
+    }
+
+    // Write LaTeX header to output file
+void write(std::ofstream& out) const {
+    // 1. Include the header tex file
+    out << "\\input{" << texFile << "}\n";
+
+    // 2. Write all commands
+    for (const auto& pair : commands) {
+        out << "\\newcommand{\\" << pair.first << "}{" << pair.second << "}\n";
+    }
+    
+    // 4. Include the content header
+    out << "\\input{" << contentFile << "}\n";
+}
+
+};
+
+
+
+
+
+class FancyLayout : public ProblemLayout {
+public:
+    //Pretty much copied from fancy_test_generator and modified 
+    std::string format(const Problem& p, int number) const override {
+        std::string out;
+
+        if (number % 2 == 1) {       // Start a new page before 
+            out +=  "\\pagebreak\n\n"; // each odd-numbered problem
+        } else {                                 // Insert blank space before
+            out +=  "\\vspace{350pt}\n\n"; // each even-numbered problem
+        }
+        out += "\\item\\begin{tabular}[t]{p{5in} p{.3in} p{.8in}}\n";
+        out +=  p.getQuestion();
+        out +=  "& & \\arabic{enumi}.\\hrulefill\n\\end{tabular}\n";
+
+        return out;
+    };
+};
+
 // ****************************************************************************
 // Configuration details
 
@@ -101,32 +157,47 @@ int main() {
     // Generate the test problems
     std::vector<Problem> test = testProblems(bank);
 
-    // Write the tex header to the file
-    outputFile << "\\input{" << TEX_HEADER << "}\n";
 
-    // Include the manually-entered information
-    outputFile << "\\newcommand{\\class}{" << CLASS << "}\n";
-    outputFile << "\\newcommand{\\term}{" << TERM << "}\n";
-    outputFile << "\\newcommand{\\examno}{" << EXAM << "}\n";
-    outputFile << "\\newcommand{\\dayeve}{" << TIME << "}\n";
-    outputFile << "\\newcommand{\\formletter}{" << FORM << "}\n";
-    outputFile << "\\newcommand{\\numproblems}{" << NUM_PROBLEMS << " }\n";
-    outputFile << "\\newcommand{\\testtitle}{" << TITLE << "}\n";
+    // Uses the header class to add commands and write the header 
+    Header header(TEX_HEADER, CONTENT_HEADER);
+    header.addCommand("class", CLASS);        
+    header.addCommand("term", TERM);          
+    header.addCommand("examno", EXAM);        
+    header.addCommand("dayeve", TIME);        
+    header.addCommand("formletter", FORM);    
+    header.addCommand("numproblems", NUM_PROBLEMS); 
+    header.addCommand("testtitle", TITLE);    
+    header.write(outputFile);
+    // // Write the tex header to the file
+    // outputFile << "\\input{" << TEX_HEADER << "}\n";
 
-    // Write the content header to the file
-    outputFile << "\\input{" << CONTENT_HEADER << "}\n";
+    // // Include the manually-entered information
+    // outputFile << "\\newcommand{\\class}{" << CLASS << "}\n";
+    // outputFile << "\\newcommand{\\term}{" << TERM << "}\n";
+    // outputFile << "\\newcommand{\\examno}{" << EXAM << "}\n";
+    // outputFile << "\\newcommand{\\dayeve}{" << TIME << "}\n";
+    // outputFile << "\\newcommand{\\formletter}{" << FORM << "}\n";
+    // outputFile << "\\newcommand{\\numproblems}{" << NUM_PROBLEMS << " }\n";
+    // outputFile << "\\newcommand{\\testtitle}{" << TITLE << "}\n";
 
-    // Write the problems to the file
+    // // Write the content header to the file
+    // outputFile << "\\input{" << CONTENT_HEADER << "}\n";
+
+
+
     int problem_number = 1;
+    FancyLayout layout;
     for (Problem problem : test) {
-        if (problem_number % 2 == 1) {       // Start a new page before 
-            outputFile << "\\pagebreak\n\n"; // each odd-numbered problem
-        } else {                                 // Insert blank space before
-            outputFile << "\\vspace{350pt}\n\n"; // each even-numbered problem
-        }
-        outputFile << "\\item\\begin{tabular}[t]{p{5in} p{.3in} p{.8in}}\n";
-        outputFile << problem.getQuestion();
-        outputFile << "& & \\arabic{enumi}.\\hrulefill\n\\end{tabular}\n";
+        // if (problem_number % 2 == 1) {       // Start a new page before 
+        //     outputFile << "\\pagebreak\n\n"; // each odd-numbered problem
+        // } else {                                 // Insert blank space before
+        //     outputFile << "\\vspace{350pt}\n\n"; // each even-numbered problem
+        // }
+        // outputFile << "\\item\\begin{tabular}[t]{p{5in} p{.3in} p{.8in}}\n";
+        // outputFile << problem.getQuestion();
+        // outputFile << "& & \\arabic{enumi}.\\hrulefill\n\\end{tabular}\n";
+        // problem_number += 1;
+        outputFile << layout.format(problem, problem_number);
         problem_number += 1;
     }
 

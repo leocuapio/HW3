@@ -4,6 +4,8 @@
 #include <string>
 #include <vector>
 
+class Problem;
+
 class IProblem {
 public:
     virtual ~IProblem() = default;
@@ -35,5 +37,12 @@ public:
     Problemv2(const std::string rawProblem);
     // Any new info would go here 
 };
+
+class ProblemLayout {
+public:
+    virtual ~ProblemLayout() = default;
+    virtual std::string format(const Problem& p, int number) const = 0;
+};
+
 
 #endif

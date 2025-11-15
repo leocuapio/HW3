@@ -8,7 +8,43 @@
 #include "problem.h"
 
 
+class Header {
+    private: 
+        std::string texFile;
+        std::string contentFile;
+        // This map holds the command names and their corresponding values
+        std::map<std::string, std::string> commands;
+    public:
+        Header(std::string texFile, std::string contentFile): texFile(texFile), contentFile(contentFile) {};
+        std::string getTex() const {return texFile;};
+        std::string getContent() const {return contentFile;};
 
+
+        // Have a map where the key is the command name and the value is the command val
+        void write(std::ofstream& outputFile) const {
+            outputFile << "\\input{" << getTex() << "}\n";
+            outputFile << "\\begin{document}\n";
+            for (const auto& [key, value]: commands) {
+                outputFile << "\\newcommand{" << key << "}{" << value << "}\n";
+            }
+            outputFile << "\\input{" << getContent() << "}\n";
+        }
+
+        void addCommand(const std::string& key, const std::string& val) {
+            commands[key] = val;
+        }
+    };
+
+class SimpleLayout : public ProblemLayout {
+public:
+    //Pretty much copied from fancy_test_generator and modified 
+    std::string format(const Problem& p, int number) const override {
+        std::string out;
+
+        out += "\\item " + p.getQuestion() + "\n";
+        return out;
+    };
+};
 
 // ****************************************************************************
 // Configuration details
@@ -29,7 +65,7 @@ int MAX_TOPIC = 7; // by 3-7 problems.
 int MIN_DIFFICULTY = 65; // Total difficulty (using the difficulty defined 
 int MAX_DIFFICULTY = 75; // in the problem bank) must be 65-75.
 
-// tex files to include in the test file
+// // tex files to include in the test file
 std::string TEX_HEADER = "simple_tex_header.tex";
 std::string CONTENT_HEADER = "simple_content_header.tex";
 
@@ -99,14 +135,23 @@ int main() {
         return 1;
     }
 
+    Header header = Header("simple_tex_header.tex", "simple_content_header.tex");
+    header.addCommand("testtitle", TITLE);
+    header.write(outputFile);
+    
     // Write the header to the file
-    outputFile << "\\input{" << TEX_HEADER << "}\n";
-    outputFile << "\\newcommand{\\testtitle}{" << TITLE << "}\n";
-    outputFile << "\\input{" << CONTENT_HEADER << "}\n";
+    // outputFile << "\\input{" << TEX_HEADER << "}\n";
+    // outputFile << "\\newcommand{\\testtitle}{" << TITLE << "}\n";
+    // outputFile << "\\input{" << CONTENT_HEADER << "}\n";
 
+
+    SimpleLayout layout;
+    int number = 1;
     // Write the problems to the file
     for (Problem problem : test) {
-        outputFile << "\\item " << problem.getQuestion() << "\n";
+        // outputFile << "\\item " << problem.getQuestion() << "\n";
+        outputFile << layout.format(problem, number);
+        number += 1;
     }
 
     // End the file

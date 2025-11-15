@@ -19,10 +19,10 @@ std::vector<std::string> split(std::string s, std::string del) {
 std::string FORMAT = "^([\\s\\S]*)\\\\answer\\{([\\s\\S]*)\\}[\\s\\S]*\\\\topic\\{(.*)\\}[\\s\\S]*\\\\difficulty\\{(.*)\\}";
 std::regex re(FORMAT);
 
-std::string Problem::getQuestion() {return question;}
-std::string Problem::getAnswer() {return answer;}
-std::string Problem::getTopic() {return topic;}
-int Problem::getDifficulty() {return difficulty;}
+std::string Problem::getQuestion() const {return question;}
+std::string Problem::getAnswer() const {return answer;}
+std::string Problem::getTopic() const {return topic;}
+int Problem::getDifficulty() const {return difficulty;}
 
 
 Problem::Problem(std::string rawProblem) {
