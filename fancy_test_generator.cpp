@@ -31,7 +31,7 @@ public:
 
 class FancyLayout : public ProblemLayout {
 public:
-    //Pretty much copied from fancy_test_generator and modified 
+    //Pretty much copied from below and modified 
     std::string format(const Problem& p, int number) const override {
         std::string out;
 
