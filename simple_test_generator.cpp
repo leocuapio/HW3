@@ -23,6 +23,7 @@ class Header {
         // Have a map where the key is the command name and the value is the command val
         void write(std::ofstream& outputFile) const {
             outputFile << "\\input{" << getTex() << "}\n";
+            // Used GPT to help with begin document line was giving me a weird error 
             outputFile << "\\begin{document}\n";
             for (const auto& [key, value]: commands) {
                 outputFile << "\\newcommand{" << key << "}{" << value << "}\n";
