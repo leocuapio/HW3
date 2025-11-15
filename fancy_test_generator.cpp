@@ -19,13 +19,14 @@ public:
     void addCommand(const std::string& key, const std::string& val) {
         commands[key] = val;
     }
-
+    
     void write(std::ofstream& out) const {
         out << "\\input{" << texFile << "}\n";
     for (const auto& pair : commands) {
         out << "\\newcommand{\\" << pair.first << "}{" << pair.second << "}\n";
     }
     out << "\\input{" << contentFile << "}\n";
+};
 };
 
 class FancyLayout : public ProblemLayout {
