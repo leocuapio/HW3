@@ -20,29 +20,13 @@ public:
         commands[key] = val;
     }
 
-    void addCommand(const std::string& key, int val) {
-        commands[key] = std::to_string(val);  // Automatically convert numbers to strings
-    }
-
-    // Write LaTeX header to output file
-void write(std::ofstream& out) const {
-    // 1. Include the header tex file
-    out << "\\input{" << texFile << "}\n";
-
-    // 2. Write all commands
+    void write(std::ofstream& out) const {
+        out << "\\input{" << texFile << "}\n";
     for (const auto& pair : commands) {
         out << "\\newcommand{\\" << pair.first << "}{" << pair.second << "}\n";
     }
-    
-    // 4. Include the content header
     out << "\\input{" << contentFile << "}\n";
-}
-
 };
-
-
-
-
 
 class FancyLayout : public ProblemLayout {
 public:
@@ -165,7 +149,7 @@ int main() {
     header.addCommand("examno", EXAM);        
     header.addCommand("dayeve", TIME);        
     header.addCommand("formletter", FORM);    
-    header.addCommand("numproblems", NUM_PROBLEMS); 
+    header.addCommand("numproblems", std::to_string(NUM_PROBLEMS)); 
     header.addCommand("testtitle", TITLE);    
     header.write(outputFile);
     // // Write the tex header to the file
