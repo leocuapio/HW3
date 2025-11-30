@@ -10,3 +10,5 @@
 *.log
 *.fls
 *.tex
+*.fdb_latexmk
+*_problem_bank_generator.cpp
