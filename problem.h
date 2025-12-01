@@ -1,8 +1,13 @@
 #ifndef PROBLEM_H
 #define PROBLEM_H
 
+#include <iostream>
 #include <string>
 #include <vector>
+#include <random>
+#include <ranges>
+#include <algorithm>
+#include <fstream>
 
 class Problem;
 
@@ -44,5 +49,10 @@ public:
     virtual std::string format(const Problem& p, int number) const = 0;
 };
 
+class AlgorithmSelect {
+public:
+    virtual ~AlgorithmSelect() = default;
+    virtual std::vector<Problem> select(const std::vector<Problem>& bank) const = 0;
+};
 
 #endif

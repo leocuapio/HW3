@@ -7,6 +7,7 @@
 #include <set>
 #include "problem.h"
 
+
 class Header {
 private:
     std::string texFile;      
@@ -47,6 +48,8 @@ public:
         return out;
     };
 };
+
+
 
 // ****************************************************************************
 // Configuration details

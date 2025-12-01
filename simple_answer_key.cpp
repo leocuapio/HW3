@@ -43,6 +43,7 @@ public:
         std::string out;
 
         out += "\\item " + p.getQuestion() + "\n";
+        out += "\\answer{" + p.getAnswer() + "}\n";
         return out;
     };
 };
@@ -138,7 +139,7 @@ int main() {
     }
 
     Header header = Header("simple_tex_header.tex", "simple_content_header.tex");
-    header.addCommand("testtitle", TITLE);
+    header.addCommand("\\testtitle", TITLE);
     header.write(outputFile);
     
     // Write the header to the file
